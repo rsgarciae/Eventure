@@ -1,0 +1,57 @@
+# Eventure configuration. Copy to config.toml and edit.
+#
+# Nothing here is baked into the code: city, radius, language and timezone are
+# read at run time. Delete the [location] block entirely and the worker still
+# runs — it simply stops applying radius filtering.
+
+[general]
+language = "en"            # digest labels; also the first language tried for dates
+timezone = "<IANA zone>"   # e.g. Europe/Madrid, America/Mexico_City, Asia/Tokyo
+date_order = "DMY"         # DMY or MDY, for ambiguous 03/04 style dates
+horizon_days = 60
+max_events = 20            # digest is capped so it stays one message
+state_path = "data/state.json"
+
+[schedule]
+# Local times at which `eventure serve` (the container) sends a digest.
+times = ["08:00", "19:00"]
+run_on_start = false
+
+[location]
+# Optional. Only needed once you add platform-wide feeds that need distance
+# filtering. Sources you list explicitly are never distance-filtered.
+# city = ""
+# lat = 0.0
+# lon = 0.0
+# radius_km = 25
+
+[telegram]
+token_env = "TELEGRAM_BOT_TOKEN"
+chat_id = 0
+
+[google]
+token_path = "secrets/token.json"   # written by google_auth.py
+calendar_id = "primary"
+
+[[source]]
+name = "Example ICS calendar"
+type = "ics"
+url = "https://example.org/events.ics"
+
+[[source]]
+name = "Example venue RSS"
+type = "rss"
+url = "https://example.org/feed/"
+
+# Instagram is two steps and stays optional:
+#   1. type instagram_profile — describes what ig_collect.py should fetch
+#   2. type instagram_json    — what the worker reads; never touches Meta itself
+[[source]]
+name = "Instagram: example"
+type = "instagram_profile"
+url = "https://www.instagram.com/example/"
+
+[[source]]
+name = "Instagram feed"
+type = "instagram_json"
+path = "data/instagram.json"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Eventure Instagram collector (optional, disposable)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/eventure
+EnvironmentFile=-/opt/eventure/.env
+# Fails independently of the digest: if Meta breaks, only this unit goes red.
+ExecStart=/usr/bin/python3 ig_collect.py --days 14 --limit 12
+Nice=10

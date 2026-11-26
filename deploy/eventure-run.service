@@ -1,0 +1,13 @@
+[Unit]
+Description=Eventure digest run
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/eventure
+EnvironmentFile=-/opt/eventure/.env
+ExecStart=/usr/bin/python3 -m eventure run
+# A failed run must leave a trace; silence is what we are trying to end.
+StandardOutput=journal
+StandardError=journal

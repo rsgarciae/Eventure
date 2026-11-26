@@ -1,0 +1,33 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 5 * * 1"
+
+# Default to no permissions; the single job that needs more asks for it.
+permissions: read-all
+
+jobs:
+  analyze:
+    name: Analyze Python
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Initialise CodeQL
+        uses: github/codeql-action/init@e274593ecfcbcdc39c8f034978d84614cebcb71d # v4.39.5
+        with:
+          languages: python
+          # Nothing to compile: the worker is pure standard library.
+          build-mode: none
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@e274593ecfcbcdc39c8f034978d84614cebcb71d # v4.39.5

@@ -1,0 +1,43 @@
+# Eventure — your watch list (template)
+#
+# Copy it once, then edit the copy:
+#
+#     cp sources.example.txt sources.txt
+#
+# `sources.txt` is git-ignored on purpose: what you watch is yours, not the
+# repository's. This example file is only the shape to fill in.
+#
+# One source per line. Two forms:
+#   https://example.org/events
+#   My local venue | https://example.org/events
+#
+# Lines starting with # are ignored.
+#
+# What to put here: the venues, organisers, galleries, clubs and pages you check
+# manually each week. Paste the page you open, not the perfect URL — the audit
+# follows <link rel="alternate"> and can probe common feed paths.
+#
+# How to fill this in fast: for each site, use the browser's "view source" and
+# search for either of:
+#   text/calendar      -> an ICS export exists
+#   application/rss    -> an RSS/Atom feed exists
+# If neither appears, add the site anyway; --probe will try /feed, /rss,
+# /rss.xml, /atom.xml, /events.ics and /calendar.ics.
+#
+# Instagram: add the profile URL. It is collected by ig_collect.py (see the
+# README); the worker never talks to Meta.
+# Facebook: add it for the record, but its events cannot be read without a login
+# session and are reported as SOCIAL, never fetched.
+
+# --- web calendars and feeds -----------------------------------------------
+# Music venue             | https://www.example.com/events
+# Gallery                 | https://www.example.org/exhibitions
+# Hiking group calendar   | https://www.example.net/calendar.ics
+#
+# A WordPress site running "The Events Calendar" exposes iCal at ?ical=1. Prefer
+# that endpoint over the HTML page: same content, structured dates, no guessing.
+# City agenda             | https://www.example.com/events/?ical=1
+
+# --- social accounts -------------------------------------------------------
+# https://www.instagram.com/some_venue/
+# https://www.facebook.com/some-venue/

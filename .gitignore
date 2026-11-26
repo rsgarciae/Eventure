@@ -1,0 +1,38 @@
+# Eventure
+
+# Local run artifacts
+audit.json
+state.json
+state.json.tmp
+*.log
+*.ics
+__pycache__/
+*.pyc
+data/
+secrets/
+instaloader/
+.token.json.tmp
+
+# Fuzzing output (crash-*, corpus) is local, never committed
+fuzz/corpus/
+fuzz/crash-*
+crash-*
+
+# Credentials — this box stores bot tokens, OAuth refresh tokens and CalDAV
+# app passwords, and if one leaks it is revoked and replaced, not rotated quietly.
+.env
+# Ignore real env files, but keep the documented example.
+.env.*
+!.env.example
+token.json
+client_secret*.json
+secrets.toml
+# config.example.toml is the committed template; the live file holds personal
+# values (chat id, source list) and stays on the machine that runs the bot.
+config.toml
+config.local.toml
+# sources.example.txt is the committed template; your own watch list is private.
+sources.txt
+
+# macOS
+.DS_Store

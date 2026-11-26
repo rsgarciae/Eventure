@@ -1,0 +1,32 @@
+# Keeps the pinned things pinned *and* current: a Dockerfile digest or a
+# requirements hash that nobody updates is a false sense of safety.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "pip"
+
+  - package-ecosystem: "pip"
+    directory: "/fuzz"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "fuzz"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "docker"

@@ -1,0 +1,14 @@
+[Unit]
+Description=Eventure Telegram button handler (outbound long polling only)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/eventure
+EnvironmentFile=-/opt/eventure/.env
+ExecStart=/usr/bin/python3 -m eventure poll
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal

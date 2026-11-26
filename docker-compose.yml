@@ -1,0 +1,71 @@
+# Eventure on Docker.
+#
+#   docker compose up -d --build              # worker only
+#   docker compose --profile instagram up -d  # worker + Instagram collector
+#
+# Before the first start:
+#   cp config.example.toml config.toml   (already done in this repo)
+#   echo 'TELEGRAM_BOT_TOKEN=...' > .env
+#   mkdir -p data secrets
+#   put Google's token.json in ./secrets/token.json (optional)
+#   for the Instagram collector: python3 ig_collect.py --engine instagrapi --login
+
+services:
+  eventure:
+    build:
+      context: .
+      target: base
+    image: eventure:latest
+    container_name: eventure
+    restart: unless-stopped
+    init: true
+    env_file:
+      # Optional so a fresh clone still parses; without a token the worker says
+      # "telegram token missing" instead of failing at compose time.
+      - path: .env
+        required: false
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - ./data:/app/data
+      # Read-only. If the file is absent the calendar is simply disabled and the
+      # digest still arrives; the bot says so when you press a button.
+      - ./secrets:/app/secrets:ro
+    command: ["python", "-m", "eventure", "serve"]
+    # Keep the SD card from filling up with container logs.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  instagram:
+    profiles: ["instagram"]
+    build:
+      context: .
+      target: ig
+    image: eventure:ig
+    container_name: eventure-ig
+    restart: unless-stopped
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - ./data:/app/data
+    # Its own loop, so a Meta failure never touches the worker. If every profile
+    # fails, ig_collect.py records the errors and the digest footer shows them.
+    # Uses the session file at data/ig_session.json, created once on the host:
+    #   pip install instagrapi
+    #   python3 ig_collect.py --engine instagrapi --login
+    command:
+      - sh
+      - -c
+      - "while true; do python ig_collect.py --engine instagrapi --days 14 --limit 12 || true; sleep 21600; done"
+    depends_on:
+      - eventure
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
